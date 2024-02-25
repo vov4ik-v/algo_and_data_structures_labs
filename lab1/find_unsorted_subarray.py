@@ -1,66 +1,65 @@
-def find_smaller_element_range(array, start_idx_of_subarray, min_element_of_subarray):
+def find_smaller_element_range(array, start_index_of_subarray, min_element_of_subarray):
     while (
-        start_idx_of_subarray > 0
-        and min_element_of_subarray < array[start_idx_of_subarray - 1]
+            start_index_of_subarray > 0
+            and min_element_of_subarray < array[start_index_of_subarray - 1]
     ):
-        start_idx_of_subarray -= 1
-    return start_idx_of_subarray
+        start_index_of_subarray -= 1
+    return start_index_of_subarray
 
 
-def find_larger_element_range(array, end_idx_of_subarray, max_el_of_subarray):
-
+def find_larger_element_range(array, end_index_of_subarray, max_element_of_subarray):
     while (
-        end_idx_of_subarray + 1 < len(array)
-        and max_el_of_subarray > array[end_idx_of_subarray + 1]
+            end_index_of_subarray + 1 < len(array)
+            and max_element_of_subarray > array[end_index_of_subarray + 1]
     ):
-        end_idx_of_subarray += 1
-    return end_idx_of_subarray
+        end_index_of_subarray += 1
+    return end_index_of_subarray
 
 
-def find_start_idx_of_subarray(arr):
-    for iter in range(0, len(arr) - 1):
-        if arr[iter] > arr[iter + 1]:
-            return iter
+def find_start_index_of_subarray(array):
+    for index in range(0, len(array) - 1):
+        if array[index] > array[index + 1]:
+            return index
 
 
-def find_end_idx_of_subarray(arr):
-    for iter in range(len(arr) - 1, 0, -1):
-        if arr[iter] < arr[iter - 1]:
-            return iter
+def find_end_index_of_subarray(array):
+    for index in range(len(array) - 1, 0, -1):
+        if array[index] < array[index - 1]:
+            return index
 
 
-def check_is_sorted_array(arr):
-    for iter in range(1, len(arr)):
-        if arr[iter] < arr[iter - 1]:
+def check_is_sorted_array(array):
+    for index in range(1, len(array)):
+        if array[index] < array[index - 1]:
             return False
     return True
 
 
-def find_min_and_max_el_in_subarray(subarray):
-    min_el_of_subarray = subarray[0]
-    max_el_of_subarray = subarray[0]
-    for iter in range(0, len(subarray)):
-        if subarray[iter] > max_el_of_subarray:
-            max_el_of_subarray = subarray[iter]
-        if subarray[iter] < min_el_of_subarray:
-            min_el_of_subarray = subarray[iter]
+def find_min_and_max_element_in_subarray(subarray):
+    min_element_of_subarray = subarray[0]
+    max_element_of_subarray = subarray[0]
+    for index in range(0, len(subarray)):
+        if subarray[index] > max_element_of_subarray:
+            max_element_of_subarray = subarray[index]
+        if subarray[index] < min_element_of_subarray:
+            min_element_of_subarray = subarray[index]
 
-    return min_el_of_subarray, max_el_of_subarray
+    return min_element_of_subarray, max_element_of_subarray
 
 
-def find_unsorted_subarray(arr):
-    if check_is_sorted_array(arr) is True:
+def find_unsorted_subarray(array):
+    if check_is_sorted_array(array) is True:
         return -1, -1
 
-    start_idx = find_start_idx_of_subarray(arr)
-    end_idx = find_end_idx_of_subarray(arr)
+    start_index = find_start_index_of_subarray(array)
+    end_index = find_end_index_of_subarray(array)
 
-    subarray = arr[start_idx : end_idx + 1]
+    subarray = array[start_index: end_index + 1]
 
-    min_el_of_subarray, max_el_of_subarray = find_min_and_max_el_in_subarray(subarray)
+    min_element_of_subarray, max_element_of_subarray = find_min_and_max_element_in_subarray(subarray)
 
-    final_start_index = find_smaller_element_range(arr, start_idx, min_el_of_subarray)
-    final_end_index = find_larger_element_range(arr, end_idx, max_el_of_subarray)
+    final_start_index = find_smaller_element_range(array, start_index, min_element_of_subarray)
+    final_end_index = find_larger_element_range(array, end_index, max_element_of_subarray)
 
     return final_start_index, final_end_index
 
