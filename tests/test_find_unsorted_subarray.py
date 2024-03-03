@@ -1,5 +1,5 @@
 import unittest
-from lab.l3.lab1.find_unsorted_subarray import find_unsorted_subarray
+from find_unsorted_subarray.labs.find_unsorted_subarray import find_unsorted_subarray
 
 
 class TestFindUnsortedSubarray(unittest.TestCase):
@@ -11,6 +11,9 @@ class TestFindUnsortedSubarray(unittest.TestCase):
 
     def test_single_element_array(self):
         self.assertEqual(find_unsorted_subarray([1]), (-1, -1))
+
+    def test_unsorted(self):
+        self.assertEqual(find_unsorted_subarray([1, 2, 3, 4, 5,-1]), (0,5))
 
 
 if __name__ == "__main__":
