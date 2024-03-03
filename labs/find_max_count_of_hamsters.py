@@ -23,7 +23,7 @@ def find_max_count_of_hamsters(sorted_hamsters, sum_of_eat):
     return max_hamsters_count
 
 
-def check_data_validity(sum_of_eat, count_of_hamsters, hamsters):
+def check_data_validity(sum_of_eat, count_of_hamsters):
     if not 0 <= sum_of_eat <= 10**9:
         raise ValueError("sum_of_eat must be between 0 and 10^9")
     if not 1 <= count_of_hamsters <= 10**5:

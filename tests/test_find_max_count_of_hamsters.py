@@ -7,9 +7,7 @@ class TestMaxHamsters(unittest.TestCase):
         sum_of_eat = 10
         count_of_hamsters = 0
         hamsters = []
-        self.assertRaises(
-            ValueError, max_hamsters, sum_of_eat, count_of_hamsters, hamsters
-        )
+        self.assertRaises(gValueError, max_hamsters, sum_of_eat, count_of_hamsters, hamsters)
 
     def test_large_food_supply(self):
         sum_of_eat = 100
