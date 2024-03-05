@@ -1,39 +1,53 @@
-def sort_hamsters(hamsters):
-    return sorted(hamsters, key=lambda x: x[1])
+import unittest
 
 
-def find_max_count_of_hamsters(sorted_hamsters, sum_of_eat):
-    max_hamsters_count = 0
-    total_greedy = 0
-    for hamster in sorted_hamsters:
-        food_needed_for_current_hamster, greedy_for_current_hamster = hamster
-        required_food = (
-            food_needed_for_current_hamster
-            + greedy_for_current_hamster * max_hamsters_count
-            + total_greedy
-            if max_hamsters_count > 0
-            else food_needed_for_current_hamster
-        )
-        if required_food <= sum_of_eat:
-            max_hamsters_count += 1
-            total_greedy += greedy_for_current_hamster
-            sum_of_eat -= required_food
+def check_for_feed_all_hamsters(hamsters, sum_of_eat):
+    sum_food_for_all_hamsters = sum(sorted([hamster[0] + hamster[1] * len(hamsters) for hamster in hamsters]))
+    if sum_food_for_all_hamsters <= sum_of_eat:
+        return True
+
+
+def find_max_hamsters_count_dividing_by_2(start_index, end_index, sum_of_eat,
+                                          count_of_food_for_different_count_of_hamsters,
+                                          hamsters):
+    middle_index = (start_index + end_index) // 2
+    food_needed_list = sorted([hamster[0] + hamster[1] * middle_index for hamster in hamsters])
+    sum_of_food_needed_list_to_middle_index = sum(food_needed_list[:middle_index + 1])
+    if sum_of_food_needed_list_to_middle_index == sum_of_eat:
+        return middle_index + 1
+
+    elif sum_of_food_needed_list_to_middle_index > sum_of_eat:
+        count_of_food_for_different_count_of_hamsters[middle_index] = sum_of_food_needed_list_to_middle_index
+        return find_max_hamsters_count_dividing_by_2(start_index, middle_index - 1, sum_of_eat,
+                                                     count_of_food_for_different_count_of_hamsters, hamsters)
+
+
+    else:
+        count_of_food_for_different_count_of_hamsters[middle_index] = sum_of_food_needed_list_to_middle_index
+        if middle_index + 1 > len(count_of_food_for_different_count_of_hamsters) - 1:
+            return middle_index + 1
+        if count_of_food_for_different_count_of_hamsters[middle_index + 1] > sum_of_eat:
+            return middle_index + 1
         else:
-            break
-    return max_hamsters_count
-
-
-def check_data_validity(sum_of_eat, count_of_hamsters):
-    if not 0 <= sum_of_eat <= 10**9:
-        raise ValueError("sum_of_eat must be between 0 and 10^9")
-    if not 1 <= count_of_hamsters <= 10**5:
-        raise ValueError("count_of_hamsters must be between 1 and 10^5")
+            return find_max_hamsters_count_dividing_by_2(middle_index + 1, end_index, sum_of_eat,
+                                                         count_of_food_for_different_count_of_hamsters, hamsters)
 
 
 def max_hamsters(sum_of_eat, count_of_hamsters, hamsters):
-    check_data_validity(sum_of_eat, count_of_hamsters, hamsters)
-    sorted_hamsters = sort_hamsters(hamsters)
-    return find_max_count_of_hamsters(sorted_hamsters, sum_of_eat)
+    check_data_validity(sum_of_eat, count_of_hamsters)
+    count_of_food_for_different_count_of_hamsters = [0] * count_of_hamsters
+    if check_for_feed_all_hamsters(hamsters, sum_of_eat): return count_of_hamsters
+    return find_max_hamsters_count_dividing_by_2(0, count_of_hamsters - 1, sum_of_eat,
+                                                 count_of_food_for_different_count_of_hamsters,
+                                                 hamsters)
 
 
-print(max_hamsters(5, 3, [[1, 2], [2, 2], [3, 1]]))
+def check_data_validity(sum_of_eat, count_of_hamsters):
+    if not 0 <= sum_of_eat <= 10 ** 9:
+        raise ValueError("sum_of_eat must be between 0 and 10^9")
+    if not 1 <= count_of_hamsters <= 10 ** 5:
+        raise ValueError("count_of_hamsters must be between 1 and 10^5")
+
+
+print(max_hamsters(17351, 9,
+                   [[10000, 1], [1000, 1], [3000, 1], [500, 1], [300, 1], [700, 1], [600, 1], [400, 2], [50, 80]]))  # 3
