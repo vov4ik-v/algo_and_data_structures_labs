@@ -1,5 +1,5 @@
 import unittest
-from find_unsorted_subarray.labs.find_max_count_of_hamsters import max_hamsters
+from src.find_max_count_of_hamsters import max_hamsters
 class TestMaxHamsters(unittest.TestCase):
     def test_example_1(self):
         self.assertEqual(max_hamsters(7, 3, [[1, 2], [2, 2], [3, 1]]), 2)

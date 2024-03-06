@@ -1,5 +1,5 @@
 import unittest
-from find_unsorted_subarray.labs.find_unsorted_subarray import find_unsorted_subarray
+from src.find_unsorted_subarray import find_unsorted_subarray
 
 
 class TestFindUnsortedSubarray(unittest.TestCase):
