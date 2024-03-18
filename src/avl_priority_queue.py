@@ -7,34 +7,34 @@ class Node:
         self.height = 1
 
 
-def get_height_for_root(root):
-    if not root:
+def get_height_for_node(node):
+    if not node:
         return 0
-    return root.height
+    return node.height
 
 
-def get_balance_for_root(root):
-    if not root:
+def get_balance_for_node(node):
+    if not node:
         return 0
-    return get_height_for_root(root.left) - get_height_for_root(root.right)
+    return get_height_for_node(node.left) - get_height_for_node(node.right)
 
 
-def update_height_and_balance_for_root(root):
-    root.height = 1 + max(
-        get_height_for_root(root.left), get_height_for_root(root.right)
+def update_height_and_balance_for_node(node):
+    node.height = 1 + max(
+        get_height_for_node(node.left), get_height_for_node(node.right)
     )
-    balance = get_balance_for_root(root)
-    return root, balance
+    balance = get_balance_for_node(node)
+    return node, balance
 
 def restore_balance(root, balance):
     if balance > 1:
-        if get_balance_for_root(root.left) >= 0:
+        if get_balance_for_node(root.left) >= 0:
             return right_rotation(root)
         else:
             root.left = left_rotation(root.left)
             return right_rotation(root)
     if balance < -1:
-        if get_balance_for_root(root.right) <= 0:
+        if get_balance_for_node(root.right) <= 0:
             return left_rotation(root)
         else:
             root.right = right_rotation(root.right)
@@ -56,7 +56,7 @@ def insert_into_queue(root, value, priority):
     else:
         root.right = insert_into_queue(root.right, value, priority)
 
-    root, balance = update_height_and_balance_for_root(root)
+    root, balance = update_height_and_balance_for_node(root)
     if abs(balance) > 1:
         return restore_balance(root, balance)
     return root
@@ -68,7 +68,7 @@ def delete_from_queue(root):
     if not root.right:
         return root.left
     root.right = delete_from_queue(root.right)
-    root, balance = update_height_and_balance_for_root(root)
+    root, balance = update_height_and_balance_for_node(root)
     if abs(balance) > 1:
         return restore_balance(root, balance)
     return find_node_with_the_most_priority(root)
@@ -81,8 +81,8 @@ def right_rotation(z):
     y.right = z
     z.left = y_right_child
 
-    z.height = 1 + max(get_height_for_root(z.right), get_height_for_root(z.right))
-    y.height = 1 + max(get_height_for_root(y.left), get_height_for_root(y.right))
+    z.height = 1 + max(get_height_for_node(z.right), get_height_for_node(z.right))
+    y.height = 1 + max(get_height_for_node(y.left), get_height_for_node(y.right))
     return y
 
 
@@ -92,8 +92,8 @@ def left_rotation(z):
 
     y.left = z
     z.right = y_left_child
-    z.height = 1 + max(get_height_for_root(z.right), get_height_for_root(z.right))
-    y.height = 1 + max(get_height_for_root(y.left), get_height_for_root(y.right))
+    z.height = 1 + max(get_height_for_node(z.right), get_height_for_node(z.right))
+    y.height = 1 + max(get_height_for_node(y.left), get_height_for_node(y.right))
     return y
 
 
