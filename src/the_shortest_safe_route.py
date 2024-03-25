@@ -8,10 +8,11 @@ def find_start_points(grid):
     return [(i, 0) for i in range(rows) if grid[i][0] == 1]
 
 
-def find_path(start_nodes, grid):
+def find_shortest_route(start_nodes, grid):
     shortest_path_list = []
     for start_point in start_nodes:
         visited = []
+        from_to = {}
         queue = [(start_point, [])]
         while queue:
             node, path = queue.pop(0)
@@ -20,12 +21,20 @@ def find_path(start_nodes, grid):
 
             if node[1] == len(grid[0]) - 1:
                 shortest_path_list.append(len(path))
+                find_path(from_to,node,path)
 
             neighboring_nodes = get_neighbors(grid, node[1], node[0])
             for neighbor in neighboring_nodes:
                 if neighbor not in visited:
                     queue.append((neighbor, path[:]))
+                    from_to[neighbor] = node
+
     return min(shortest_path_list) if shortest_path_list else -1
+
+def find_path(from_to,node,path):
+    for i in range(len(path)-1):
+        node = from_to[node]
+
 
 
 def get_neighbors(grid, y, x):
@@ -60,7 +69,7 @@ def the_shortest_safe_route(grid):
     start_points = find_start_points(grid_without_hidden_mines)
     if not start_points:
         return -1
-    return find_path(start_points, grid_without_hidden_mines)
+    return find_shortest_route(start_points, grid_without_hidden_mines)
 
 def read_input(file_name):
     input_matrix = []
@@ -75,10 +84,14 @@ def write_output(filename, result):
     with open(filename, "w") as file:
         file.write(str(result))
 
-
-def main():
-    grid = read_input("input.txt")
+def find_shortest_safe_route(file_input,file_output):
+    grid = read_input(file_input)
     result = the_shortest_safe_route(grid)
-    write_output("output.txt", result)
+    write_output(file_output, result)
+def main():
+    find_shortest_safe_route("input.txt","output.txt")
+    # grid = read_input("input.txt")
+    # result = the_shortest_safe_route(grid)
+    # write_output("output.txt", result)
 
 main()
