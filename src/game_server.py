@@ -1,5 +1,4 @@
-import heapq
-
+from src.avl_priority_queue import AVLTree
 
 def read_input(filename):
     with open(filename, 'r') as file:
@@ -21,21 +20,22 @@ def find_max_latency_from_server_to_clients(graph, start, clients):
     latencies[start] = 0
     visited = set()
     from_to={}
-    priority_queue = []
-    heapq.heapify(priority_queue)
-    heapq.heappush(priority_queue,(0,start))
-    while priority_queue:
-        current = heapq.heappop(priority_queue)
-        current_vortex = current[1]
+    priority_queue = AVLTree(start,0)
+    while not priority_queue.is_empty():
+        current = priority_queue.dequeue()
+        print(current)
+        current_vortex = current[0]
+        current_latency = current[1]
         neighbor_vortexes = graph[current_vortex]
-        for vertex,latency in neighbor_vortexes:
+        for vertex, latency in neighbor_vortexes:
             if vertex in visited:
                 continue
             visited.add(vertex)
-            if (latencies[current_vortex] + latency)<latencies[vertex]:
-                latencies[vertex]= latencies[current_vortex]+latency
+            if (latencies[current_vortex] + latency) < latencies[vertex]:
+                latencies[vertex] = latencies[current_vortex] + latency
                 from_to[vertex] = current
-            heapq.heappush(priority_queue,(latencies[vertex],vertex))
+            priority_queue.insert(vertex,latencies[vertex])
+            # priority_queue = insert_into_queue(priority_queue, vertex,latencies[vertex])
     return max([latencies[x] for x in clients])
 
 
@@ -76,6 +76,6 @@ def find_minimum_latency_from_file(file_input,file_output):
     vertexes, edges, clients, connections = read_input(file_input)
     result = find_minimum_latency(vertexes, edges, clients, connections)
     write_output(file_output, result)
-# if __name__ == '__main__':
-#     find_minimum_latency_from_file("gamsrv.in","gamsrv.out")
+if __name__ == '__main__':
+    find_minimum_latency_from_file("gamsrv.in","gamsrv.out")
 

@@ -1,5 +1,6 @@
 import unittest
 from src.game_server import *
+from src.avl_priority_queue import AVLTree
 
 
 class TestGameServerLatency(unittest.TestCase):
