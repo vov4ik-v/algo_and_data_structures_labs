@@ -1,138 +1,137 @@
 class Node:
     def __init__(self, value, priority):
-        self.value = value
-        self.priority = priority
         self.left = None
         self.right = None
+        self.parent = None
         self.height = 1
+        self.value = value
+        self.priority = priority
 
 
-def get_height_for_node(node):
-    if not node:
+def get_height(node):
+    if node is None:
         return 0
     return node.height
 
 
-def get_balance_for_node(node):
-    if not node:
-        return 0
-    return get_height_for_node(node.left) - get_height_for_node(node.right)
+class AVLTree:
+    def __init__(self, value, priority):
+        self.root = Node(value, priority)
 
+    def is_empty(self):
+        return self.root is None
 
-def update_height_and_balance_for_node(node):
-    node.height = 1 + max(
-        get_height_for_node(node.left), get_height_for_node(node.right)
-    )
-    balance = get_balance_for_node(node)
-    return node, balance
-
-def restore_balance(root, balance):
-    if balance > 1:
-        if get_balance_for_node(root.left) >= 0:
-            return right_rotation(root)
+    def insert(self, value, priority):
+        if self.root is None:
+            self.root = Node(value, priority)
         else:
-            root.left = left_rotation(root.left)
-            return right_rotation(root)
-    if balance < -1:
-        if get_balance_for_node(root.right) <= 0:
-            return left_rotation(root)
+            self.__insert_helper(self.root, value, priority)
+        self._restore_balance(self.root)
+
+    def __insert_helper(self, node, value, priority):
+        if priority >= node.priority:
+            if node.left is None:
+                node.left = Node(value, priority)
+                node.left.parent = node
+            else:
+                self.__insert_helper(node.left, value, priority)
         else:
-            root.right = right_rotation(root.right)
-            return left_rotation(root)
+            if node.right is None:
+                node.right = Node(value, priority)
+                node.right.parent = node
+            else:
+                self.__insert_helper(node.right, value, priority)
 
+    def _left_rotate(self, node):
+        new_root = node.right
+        node.right = new_root.left
+        if new_root.left is not None:
+            new_root.left.parent = node
+        new_root.parent = node.parent
+        if node.parent is None:
+            self.root = new_root
+        elif node == node.parent.left:
+            node.parent.left = new_root
+        else:
+            node.parent.right = new_root
+        new_root.left = node
+        node.parent = new_root
+        node.height = 1 + max(self.__get_height(node.left), self.__get_height(node.right))
+        new_root.height = 1 + max(self.__get_height(new_root.left), self.__get_height(new_root.right))
 
-def find_node_with_the_most_priority(root):
-    node_with_the_most_priority = root
-    while node_with_the_most_priority.right:
-        node_with_the_most_priority = node_with_the_most_priority.right
-    return node_with_the_most_priority
+    def _right_rotate(self, node):
+        new_root = node.left
+        node.left = new_root.right
+        if new_root.right is not None:
+            new_root.right.parent = node
+        new_root.parent = node.parent
+        if node.parent is None:
+            self.root = new_root
+        elif node == node.parent.right:
+            node.parent.right = new_root
+        else:
+            node.parent.left = new_root
+        new_root.right = node
+        node.parent = new_root
+        node.height = 1 + max(self.__get_height(node.left), self.__get_height(node.right))
+        new_root.height = 1 + max(self.__get_height(new_root.left), self.__get_height(new_root.right))
 
+    def _restore_balance(self, node):
+        while node is not None:
+            left_height = self.__get_height(node.left)
+            right_height = self.__get_height(node.right)
+            node.height = 1 + max(left_height, right_height)
+            balance = left_height - right_height
+            if balance > 1:
+                if self.__get_height(node.left.left) >= self.__get_height(node.left.right):
+                    self._right_rotate(node)
+                else:
+                    self._left_rotate(node.left)
+                    self._right_rotate(node)
+            elif balance < -1:
+                if self.__get_height(node.right.right) >= self.__get_height(node.right.left):
+                    self._left_rotate(node)
+                else:
+                    self._right_rotate(node.right)
+                    self._left_rotate(node)
+            node = node.parent
 
-def insert_into_queue(root, value, priority):
-    if not root:
-        return Node(value, priority)
-    elif priority <= root.priority:
-        root.left = insert_into_queue(root.left, value, priority)
-    else:
-        root.right = insert_into_queue(root.right, value, priority)
+    def __get_height(self, node):
+        if node is None:
+            return 0
+        return node.height
 
-    root, balance = update_height_and_balance_for_node(root)
-    if abs(balance) > 1:
-        return restore_balance(root, balance)
-    return root
+    def print_tree(self):
+        self._print_inorder(self.root)
 
+    def __print_inorder(self, node):
+        if node is not None:
+            self.__print_inorder(node.left)
+            print(f'{node.value}({node.priority})')
+            self.__print_inorder(node.right)
 
-def delete_from_queue(root):
-    if not root:
-        return root
-    if not root.right:
-        return root.left
-    root.right = delete_from_queue(root.right)
-    root, balance = update_height_and_balance_for_node(root)
-    if abs(balance) > 1:
-        return restore_balance(root, balance)
-    return find_node_with_the_most_priority(root)
+    def dequeue(self):
+        if self.root is None:
+            return None
 
+        current_node = self.root
+        while current_node.left:
+            current_node = current_node.left
 
-def right_rotation(z):
-    y = z.left
-    y_right_child = y.right
+        deleted_node = (current_node.value, current_node.priority)
 
-    y.right = z
-    z.left = y_right_child
+        if current_node.parent is None:  # Root node
+            if current_node.right:
+                self.root = current_node.right
+                current_node.right.parent = None
+            else:
+                self.root = None
+        else:
+            if current_node.right:
+                current_node.parent.left = current_node.right
+                current_node.right.parent = current_node.parent
+            else:
+                current_node.parent.left = None
 
-    z.height = 1 + max(get_height_for_node(z.right), get_height_for_node(z.right))
-    y.height = 1 + max(get_height_for_node(y.left), get_height_for_node(y.right))
-    return y
-
-
-def left_rotation(z):
-    y = z.right
-    y_left_child = y.left
-
-    y.left = z
-    z.right = y_left_child
-    z.height = 1 + max(get_height_for_node(z.right), get_height_for_node(z.right))
-    y.height = 1 + max(get_height_for_node(y.left), get_height_for_node(y.right))
-    return y
-
-
-def left_right_rotation(z):
-    z.left = left_rotation(z.left)
-    return right_rotation(z)
-
-
-def right_left_rotation(z):
-    z.right = left_rotation(z.right)
-    return left_rotation(z)
-
-
-def print_the_queue(root):
-    if not root:
-        return
-
-    print_the_queue(root.right)
-    print(root.value)
-    print_the_queue(root.left)
-
-
-if __name__ == "__main__":
-    root = None
-    root = insert_into_queue(root, 'root_node 1', 3)
-    root = insert_into_queue(root, 'root_node 2', 1)
-    root = insert_into_queue(root, 'root_node 3', 5)
-    root = insert_into_queue(root, 'root_node 4', 3)  # Duplicate priority
-    root = insert_into_queue(root, 'root_node 5', 3)  # Duplicate priority
-    print(root.left.right.value)
-    # self.assertEqual(root.value, 'root_node 3')  # Highest priority
-    # self.assertEqual(root.left.value, 'root_node 1')
-    # self.assertEqual(root.left.left.value, 'root_node 4')  # Among duplicates, inserted in order
-    # root = None
-    # root = insert_into_queue(root, 10, 6)
-    # root = insert_into_queue(root, 20, 5)
-    # root = insert_into_queue(root, 30, 3)
-    # root = insert_into_queue(root, 40, 2)
-    # root = insert_into_queue(root, 50, 1)
-    # root = insert_into_queue(root, 25, 4)
-    # print(delete_from_queue(root).value)
-    # print_the_queue(root)
+        self._restore_balance(current_node.parent)
+        return deleted_node
