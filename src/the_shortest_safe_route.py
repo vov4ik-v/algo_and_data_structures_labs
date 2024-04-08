@@ -88,10 +88,3 @@ def find_shortest_safe_route(file_input,file_output):
     grid = read_input(file_input)
     result = the_shortest_safe_route(grid)
     write_output(file_output, result)
-def main():
-    find_shortest_safe_route("input.txt","output.txt")
-    # grid = read_input("input.txt")
-    # result = the_shortest_safe_route(grid)
-    # write_output("output.txt", result)
-
-main()
