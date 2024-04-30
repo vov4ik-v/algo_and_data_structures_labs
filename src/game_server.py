@@ -76,6 +76,4 @@ def find_minimum_latency_from_file(file_input,file_output):
     vertexes, edges, clients, connections = read_input(file_input)
     result = find_minimum_latency(vertexes, edges, clients, connections)
     write_output(file_output, result)
-if __name__ == '__main__':
-    find_minimum_latency_from_file("gamsrv.in","gamsrv.out")
 
