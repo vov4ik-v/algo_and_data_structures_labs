@@ -25,7 +25,6 @@ def find_bigger_next_value(tree: BinaryTree, node: BinaryTree) -> BinaryTree:
     next_node = find_next(node)
     while next_node.value <= node.value:
         next_node = find_next(next_node)
-    print(next_node)
     return next_node.value
 
 
@@ -61,7 +60,6 @@ root.left.left.parent = root.left
 root.left.right.parent = root.left
 
 
-print(find_bigger_next_value(root, root.left))
 
 
 # def find_successor(tree: BinaryTree, node: BinaryTree) -> BinaryTree:

@@ -67,5 +67,3 @@ def find_unsorted_subarray(array):
 array5 = [1, 5, 6, 8, 11, 4, 2, 9, 17, 5, 20, 21, 22]
 array4 = [1, 2, 4, 7, 10, 11, 7, 12, 6, 7, 16, 18, 19]
 
-if __name__ == "__main__":
-    print(find_unsorted_subarray([array5]))
