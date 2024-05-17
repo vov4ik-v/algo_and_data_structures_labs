@@ -1,5 +1,5 @@
 class Node:
-    def __init__(self, value, priority):
+    def __init__(self, value=None, priority=None):
         self.left = None
         self.right = None
         self.parent = None
@@ -7,16 +7,17 @@ class Node:
         self.value = value
         self.priority = priority
 
-
 def get_height(node):
     if node is None:
         return 0
     return node.height
 
-
 class AVLTree:
-    def __init__(self, value, priority):
-        self.root = Node(value, priority)
+    def __init__(self, value=None, priority=None):
+        if value is not None and priority is not None:
+            self.root = Node(value, priority)
+        else:
+            self.root = None
 
     def is_empty(self):
         return self.root is None
@@ -102,7 +103,7 @@ class AVLTree:
         return node.height
 
     def print_tree(self):
-        self._print_inorder(self.root)
+        self.__print_inorder(self.root)
 
     def __print_inorder(self, node):
         if node is not None:

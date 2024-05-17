@@ -23,7 +23,6 @@ def find_max_latency_from_server_to_clients(graph, start, clients):
     priority_queue = AVLTree(start,0)
     while not priority_queue.is_empty():
         current = priority_queue.dequeue()
-        print(current)
         current_vortex = current[0]
         current_latency = current[1]
         neighbor_vortexes = graph[current_vortex]

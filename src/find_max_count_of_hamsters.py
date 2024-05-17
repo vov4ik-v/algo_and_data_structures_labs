@@ -47,7 +47,3 @@ def check_data_validity(sum_of_eat, count_of_hamsters):
         raise ValueError("sum_of_eat must be between 0 and 10^9")
     if not 1 <= count_of_hamsters <= 10 ** 5:
         raise ValueError("count_of_hamsters must be between 1 and 10^5")
-
-
-print(max_hamsters(17351, 9,
-                   [[10000, 1], [1000, 1], [3000, 1], [500, 1], [300, 1], [700, 1], [600, 1], [400, 2], [50, 80]]))  # 3

@@ -1,33 +1,39 @@
 import unittest
-from src.avl_priority_queue import insert_into_queue, delete_from_queue
 
-class TestPriorityQueue(unittest.TestCase):
-    def test_insertion(self):
-        root = None
-        root = insert_into_queue(root, 'root_node 1', 3)
-        root = insert_into_queue(root, 'root_node 2', 1)
-        root = insert_into_queue(root, 'root_node 3', 5)
-        self.assertEqual(root.value, 'root_node 1')
-        self.assertEqual(root.left.value, 'root_node 2')
-        self.assertEqual(root.right.value, 'root_node 3')
+from src.avl_priority_queue import AVLTree
 
-    def test_priority_duplicates(self):
-        root = None
-        root = insert_into_queue(root, 'root_node 1', 3)
-        root = insert_into_queue(root, 'root_node 2', 1)
-        root = insert_into_queue(root, 'root_node 3', 5)
-        root = insert_into_queue(root, 'root_node 4', 3)  # Duplicate priority
-        root = insert_into_queue(root, 'root_node 5', 3)  # Duplicate priority
-        self.assertEqual(root.value, 'root_node 1')  # Highest priority
-        self.assertEqual(root.right.value, 'root_node 3')
-        self.assertEqual(root.left.value, 'root_node 5')  # Among duplicates, inserted in order
-        self.assertEqual(root.left.left.value, 'root_node 2')  # Among duplicates, inserted in order
-        self.assertEqual(root.left.right.value, 'root_node 4')  # Among duplicates, inserted in order
 
-    def test_empty_tree(self):
-        root = None
-        root = delete_from_queue(root)
-        self.assertEqual(root, None)
+class TestAVLTree(unittest.TestCase):
 
-if __name__ == '__main__':
+    def setUp(self):
+        self.tree = AVLTree()
+
+    def test_insert_single_node(self):
+        self.tree.insert(10, 1)
+        self.assertEqual(self.tree.root.value, 10)
+        self.assertEqual(self.tree.root.priority, 1)
+        self.assertEqual(self.tree.root.height, 1)
+
+    def test_insert_multiple_nodes(self):
+        self.tree.insert(20, 5)
+        self.tree.insert(15, 3)
+        self.tree.insert(25, 7)
+
+        self.assertEqual(self.tree.root.value, 20)
+        self.assertEqual(self.tree.root.left.value, 25)
+        self.assertEqual(self.tree.root.right.value, 15)
+
+    def test_dequeue_node(self):
+        self.tree.insert(20, 5)
+        self.tree.insert(15, 3)
+        self.tree.insert(25, 7)
+        self.tree.insert(10, 2)
+
+        node = self.tree.dequeue()
+        self.assertEqual(node, (25, 7))
+
+        node = self.tree.dequeue()
+        self.assertEqual(self.tree.root.left, None)
+
+if __name__ == "__main__":
     unittest.main()
